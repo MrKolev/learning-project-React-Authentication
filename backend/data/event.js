@@ -27,8 +27,10 @@ async function get(id) {
 
 async function add(data) {
   const storedData = await readData();
-  storedData.events.unshift({ ...data, id: generateId() });
+  const newData = { ...data, id: generateId() }
+  storedData.events.unshift(newData);
   await writeData(storedData);
+  return newData;
 }
 
 async function replace(id, data) {

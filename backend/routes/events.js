@@ -61,8 +61,8 @@ router.post('/', async (req, res, next) => {
   }
 
   try {
-    await add(data);
-    res.status(201).json({ message: 'Event saved.', event: data });
+   const eventData = await add(data);
+    res.status(201).json({ message: 'Event saved.', event: eventData });
   } catch (error) {
     next(error);
   }
