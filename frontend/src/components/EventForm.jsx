@@ -2,6 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import classes from './EventForm.module.css';
 import { useState } from 'react';
+import { gatAuthToken } from './util/auth';
 
 export function EventForm({ event }) {
 
@@ -37,9 +38,11 @@ export function EventForm({ event }) {
     }
 
     try {
+      const token = gatAuthToken();
       const response = await fetch(url, {
         method: method,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token },
         body: JSON.stringify(eventData)
       });
       if (response.status === 422) {
@@ -47,10 +50,9 @@ export function EventForm({ event }) {
         alert(data.message);
         throw new Error(response.message)
       }
-      const data = await response.json()
-      const eventId = data.event.id;
+      await response.json()
 
-      navigate(`/events/${eventId}`);
+      navigate(`/events/`);
 
     } catch (error) {
       throw new Error(error);

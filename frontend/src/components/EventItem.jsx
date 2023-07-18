@@ -1,6 +1,7 @@
 import { Link, useNavigate, useParams, } from 'react-router-dom';
 import classes from './EventItem.module.css';
 import { useEffect, useState } from 'react';
+import { gatAuthToken } from './util/auth';
 
 export function EventItemDetails() {
 
@@ -27,11 +28,15 @@ export function EventItemDetails() {
 
   async function startDeleteHandler() {
     const proceed = window.confirm('Are you sure you want to delete');
+    const token = gatAuthToken();
 
     if (proceed) {
       try {
         await fetch('http://localhost:8080/events/' + id, {
           method: "delete",
+          headers:{
+            'Authorization': 'Bearer ' + token
+          }
         });
       } catch (error) {
         throw new Error(error)

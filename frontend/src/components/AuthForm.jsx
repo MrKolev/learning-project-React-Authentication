@@ -38,22 +38,26 @@ export function AuthForm() {
         body: JSON.stringify(authData)
       });
 
+      const resData = await response.json();
+
       if (response.status === 422 || response.status === 401) {
-        const err = await response.json();
         setIsSubmit(false);
-        return setErrorData(err);
+        return setErrorData(resData);
       }
 
       if (!response.ok) {
         throw response
       }
+      const token = resData.token
+      localStorage.setItem('token', token);
+      setIsSubmit(false);
+      navigate("/");
+      
     } catch (error) {
       setIsSubmit(false);
       throw error
-
     }
-    setIsSubmit(false);
-    navigate("/")
+
   }
 
   return (
@@ -64,9 +68,9 @@ export function AuthForm() {
         {errorData.errors &&
           <ul>
             {Object.values(errorData.errors)
-              .map(err => <li key={err} >{err}</li>)}
+              .map(err => <li className={classes.err} key={err} >{err}</li>)}
           </ul>}
-        {errorData.message && <p>{errorData.message}</p>}
+        {errorData.message && <p className={classes.err}>{errorData.message}</p>}
 
         <p>
           <label htmlFor="email">Email</label>
