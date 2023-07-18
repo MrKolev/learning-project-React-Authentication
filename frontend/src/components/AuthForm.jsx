@@ -1,20 +1,73 @@
+import { useState } from 'react';
 import classes from './AuthForm.module.css';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useNavigation, useSearchParams } from 'react-router-dom';
 
 export function AuthForm() {
 
   const [searchParams] = useSearchParams();
-  const isLogin = searchParams.get(`mode`) === 'login';
-  const rePassword = searchParams.get(`mode`) === 'signup';
+  const [errorData, setErrorData] = useState({});
+  const [isSubmit, setIsSubmit] = useState(false);
+  const navigate = useNavigate();
 
-  function submit() {
+  const mode = searchParams.get(`mode`);
+  const isLogin = mode === 'login';
+  const rePassword = mode === 'signup';
 
+  async function submit(e) {
+    e.preventDefault();
+    setIsSubmit(true);
+    const dataForm = new FormData(e.target);
+    const authData = {
+      email: dataForm.get('email'),
+      password: dataForm.get('password')
+    };
+
+    const rePass = dataForm.get('reRassword');
+
+
+    if (rePass && rePass !== authData.password) {
+      e.target.reset()
+      setIsSubmit(false);
+      return setErrorData({ message: 'The password is incorrect! Try again.' });
+    }
+
+    try {
+      const response = await fetch('http://localhost:8080/' + mode, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(authData)
+      });
+
+      if (response.status === 422 || response.status === 401) {
+        const err = await response.json();
+        setIsSubmit(false);
+        return setErrorData(err);
+      }
+
+      if (!response.ok) {
+        throw response
+      }
+    } catch (error) {
+      setIsSubmit(false);
+      throw error
+
+    }
+    setIsSubmit(false);
+    navigate("/")
   }
 
   return (
     <>
       <form onSubmit={submit} className={classes.form}>
         <h1>{isLogin ? 'Log in' : 'Create a new user'}</h1>
+
+        {errorData.errors &&
+          <ul>
+            {Object.values(errorData.errors)
+              .map(err => <li key={err} >{err}</li>)}
+          </ul>}
+        {errorData.message && <p>{errorData.message}</p>}
+
         <p>
           <label htmlFor="email">Email</label>
           <input id="email" type="email" name="email" required />
@@ -31,7 +84,7 @@ export function AuthForm() {
           <Link to={`?mode=${isLogin ? 'signup' : 'login'}`}>
             {isLogin ? 'Create new user' : 'Login'}
           </Link>
-          <button type="submit">{isLogin ? 'LOGIN' : "SAVE"}</button>
+          <button disabled={isSubmit} type="submit">{isLogin ? 'LOGIN' : isSubmit ? "Submiting ..." : "SAVE"}</button>
         </div>
       </form>
     </>
