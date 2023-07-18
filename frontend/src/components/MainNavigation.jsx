@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import classes from './MainNavigation.module.css';
 import { NewsletterSignup } from './NewsletterSignup';
+import { delAuthToken } from './util/auth';
 
 
 function MainNavigation() {
@@ -40,6 +41,11 @@ function MainNavigation() {
               className={({ isActive }) => isActive ? classes.active : undefined}
             >
               sign in
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to={'/'} onClick={()=> delAuthToken()}>
+              Logout
             </NavLink>
           </li>
         </ul>

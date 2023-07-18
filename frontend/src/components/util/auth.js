@@ -3,6 +3,6 @@ export const gatAuthToken = () => {
     return token
 }
 export const delAuthToken = () => {
-    localStorage.clear()
+    localStorage.removeItem("token");
     return 
 }
