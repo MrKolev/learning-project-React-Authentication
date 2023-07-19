@@ -9,12 +9,14 @@ import { EventItemDetails } from "./components/EventItem";
 import { EventForm } from "./components/EventForm";
 import { NewsletterPage } from "./components/Newsletter";
 import { AuthForm } from "./components/AuthForm";
+import { RouteProtection } from "./components/RouteProtection";
 
 function App() {
   return (
     <ErrorBoundary>
       <Routes>
-        <Route path="/*" element={<RootLayout />}>
+        <Route path="/*"
+         element={<RootLayout />}>
           <Route index={true} element={<HomePage />} />
           <Route path="newsletter" element={<NewsletterPage />} />
           <Route path="auth" element={<AuthForm />} />
@@ -24,7 +26,9 @@ function App() {
               <Route index={true} element={<EventItemDetails />} />
               <Route path="edit" element={<EditEventPage />} />
             </Route>
+            <Route element={<RouteProtection isAuth />}>
             <Route path="new" element={<EventForm />} />
+            </Route>
           </Route>
         </Route>
       </Routes>

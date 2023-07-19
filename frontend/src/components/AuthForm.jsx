@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import classes from './AuthForm.module.css';
-import { Link, useNavigate, useNavigation, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 
 export function AuthForm() {
 
@@ -94,3 +94,5 @@ export function AuthForm() {
     </>
   );
 }
+
+AuthForm.defaultProps = {}

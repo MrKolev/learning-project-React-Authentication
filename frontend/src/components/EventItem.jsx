@@ -1,7 +1,7 @@
 import { Link, useNavigate, useParams, } from 'react-router-dom';
 import classes from './EventItem.module.css';
 import { useEffect, useState } from 'react';
-import { gatAuthToken } from './util/auth';
+import { getAuthToken } from './util/auth';
 
 export function EventItemDetails() {
 
@@ -28,7 +28,7 @@ export function EventItemDetails() {
 
   async function startDeleteHandler() {
     const proceed = window.confirm('Are you sure you want to delete');
-    const token = gatAuthToken();
+    const token = getAuthToken();
 
     if (proceed) {
       try {

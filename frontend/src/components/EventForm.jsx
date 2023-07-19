@@ -2,7 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import classes from './EventForm.module.css';
 import { useState } from 'react';
-import { gatAuthToken } from './util/auth';
+import { getAuthToken } from './util/auth';
 
 export function EventForm({ event }) {
 
@@ -38,7 +38,7 @@ export function EventForm({ event }) {
     }
 
     try {
-      const token = gatAuthToken();
+      const token = getAuthToken();
       const response = await fetch(url, {
         method: method,
         headers: { 'Content-Type': 'application/json',

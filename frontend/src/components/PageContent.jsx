@@ -9,3 +9,5 @@ export function PageContent({ title, children }) {
     </div>
   );
 }
+
+PageContent.defaultProps = {title: "Welcome"}
